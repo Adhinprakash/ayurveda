@@ -1,4 +1,5 @@
 import 'package:ayurveda/controller/auth_controller.dart';
+import 'package:ayurveda/controller/patientList_controller.dart';
 import 'package:ayurveda/view/pages/login_page.dart';
 import 'package:ayurveda/view/pages/splasj_screen.dart';
 import 'package:flutter/material.dart';
@@ -15,7 +16,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(providers: 
     [
-ChangeNotifierProvider(create: (_)=>AuthProvider())
+ChangeNotifierProvider(create: (_)=>AuthProvider()),
+ChangeNotifierProvider(create: (_)=>PatientlistController())
     ],
     child: MaterialApp(
       title: 'Flutter Demo',

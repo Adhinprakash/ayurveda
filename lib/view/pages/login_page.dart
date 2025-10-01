@@ -140,13 +140,17 @@ if(success){
                           return null;
                         },
                       ),
-                      const SizedBox(height: 32),
+                      const SizedBox(height: 80),
 
                       Consumer<AuthProvider>(builder: (context,authprovider,child){
                         return CustomButton(text: "Login", onPressed: ()async{
                           handleLogin(context);
                         });
                       }),
+
+                      const SizedBox(height: 130),
+
+
 Center(
                         child: RichText(
                           textAlign: TextAlign.center,
