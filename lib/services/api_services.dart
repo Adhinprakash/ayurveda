@@ -23,14 +23,14 @@ try {
 
   
   final response= await http.post(url,
-   headers: {
-     'Content-Type': 'application/json',
-     'Accept': 'application/json',
+   headers: {     'Accept': 'application/json',
   },
-  body: jsonEncode({
-    "username":username,
-    "password":password
-  }),);
+  body: {
+ "username":username,
+  "password":password
+  }
+   
+  ,);
   if(response.statusCode==200){
     final data = json.decode(response.body);
     return LoginResponse.fromJson(data);

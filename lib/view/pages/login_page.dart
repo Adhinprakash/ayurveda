@@ -26,7 +26,7 @@ if(success){
               backgroundColor: Colors.green,
             ),
           );
-                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => PatientListPage()));
+                    Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => PatientListScreen()));
 
 }else{
    ScaffoldMessenger.of(context).showSnackBar(
@@ -143,7 +143,9 @@ if(success){
                       const SizedBox(height: 80),
 
                       Consumer<AuthProvider>(builder: (context,authprovider,child){
-                        return CustomButton(text: "Login", onPressed: ()async{
+                        return CustomButton(
+                          isLoading: authprovider.isLoading,
+                          text: "Login", onPressed: ()async{
                           handleLogin(context);
                         });
                       }),

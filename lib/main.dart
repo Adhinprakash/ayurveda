@@ -20,6 +20,7 @@ ChangeNotifierProvider(create: (_)=>AuthProvider()),
 ChangeNotifierProvider(create: (_)=>PatientlistController())
     ],
     child: MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
        
