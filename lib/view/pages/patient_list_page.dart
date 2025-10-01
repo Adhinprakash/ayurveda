@@ -58,7 +58,7 @@ final size=MediaQuery.of(context).size;
           Stack(
             children: [
               IconButton(
-                icon: const Icon(Icons.notifications_outlined, color: Colors.black),
+                icon: const Icon(Icons.notifications_outlined, color: Colors.black,size: 30,),
                 onPressed: () {},
               ),
               Positioned(
@@ -92,7 +92,6 @@ final size=MediaQuery.of(context).size;
                       border: Border.all(color: Colors.grey[300]!),
                     ),
                     child: TextField(
-                      controller: _searchController,
                       decoration: InputDecoration(
                         hintText: 'Search for treatments',
                         hintStyle: TextStyle(color: Colors.grey[400]),
@@ -176,6 +175,7 @@ const SizedBox(height: 20,),
           ),
 
            SizedBox(height: 16),
+           const Divider(color: Colors.grey,),
 
           Expanded(
             
@@ -187,14 +187,18 @@ const SizedBox(height: 20,),
                      RefreshIndicator(
                       onRefresh: _refreshPatientList,
                        child: ListView.builder(
+                        
                         itemCount: patientProvider.patient.length,
                           padding:  EdgeInsets.symmetric(horizontal: 16),
                                  
                           itemBuilder: (context, index) {
                             final patient =patientProvider.patient[index];
-                            return PatientCard(
-                              patient: patient,
-                              index: index+1,
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: PatientCard(
+                                patient: patient,
+                                index: index+1,
+                              ),
                             );
                           },
                         ),
