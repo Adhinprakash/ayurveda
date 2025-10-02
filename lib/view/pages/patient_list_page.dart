@@ -1,5 +1,6 @@
 import 'package:ayurveda/controller/auth_controller.dart';
 import 'package:ayurveda/controller/patientList_controller.dart';
+import 'package:ayurveda/view/pages/register_now_page.dart';
 import 'package:ayurveda/view/widgets/patient_card.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -212,6 +213,8 @@ const SizedBox(height: 20,),
               height: 50,
               child: ElevatedButton(
                 onPressed: () {
+                                      Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterNowPage()));
+
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF006837),

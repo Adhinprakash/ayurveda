@@ -1,5 +1,6 @@
 import 'package:ayurveda/controller/auth_controller.dart';
 import 'package:ayurveda/controller/patientList_controller.dart';
+import 'package:ayurveda/controller/registration_provider.dart';
 import 'package:ayurveda/view/pages/login_page.dart';
 import 'package:ayurveda/view/pages/splasj_screen.dart';
 import 'package:flutter/material.dart';
@@ -17,7 +18,9 @@ class MyApp extends StatelessWidget {
     return MultiProvider(providers: 
     [
 ChangeNotifierProvider(create: (_)=>AuthProvider()),
-ChangeNotifierProvider(create: (_)=>PatientlistController())
+ChangeNotifierProvider(create: (_)=>PatientlistController()),
+ChangeNotifierProvider(create: (_)=>RegistrationProvider())
+
     ],
     child: MaterialApp(
       debugShowCheckedModeBanner: false,

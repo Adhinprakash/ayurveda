@@ -13,6 +13,7 @@ class RegistrationProvider extends ChangeNotifier{
   Branch? _selectedBranch;
   String _selectedLocation = 'Kozhikode';
   String _paymentOption = 'Cash';
+  String? _errorMessage;
 
   double _totalAmount = 0;
   double _discountAmount = 0;
@@ -22,6 +23,7 @@ class RegistrationProvider extends ChangeNotifier{
   TimeOfDay _treatmentTime = TimeOfDay.now();
 
 
+  String? get errorMessage => _errorMessage;
 
 
   bool get isLoading => _isLoading;
@@ -37,7 +39,6 @@ class RegistrationProvider extends ChangeNotifier{
   double get balanceAmount => _balanceAmount;
   DateTime get treatmentDate => _treatmentDate;
   TimeOfDay get treatmentTime => _treatmentTime;
-
 
 
 
@@ -64,6 +65,70 @@ void setBranch(Branch branch){
     _treatmentTime = time;
     notifyListeners();
   }
+
+
+  void addTreatment(Treatment treatment, int maleCount, int femaleCount) {
+    final existing = _selectedTreatments.firstWhere(
+      (t) => t.treatment.id == treatment.id,
+      orElse: () => TreatmentSelection(treatment: treatment),
+    );
+
+    if (!_selectedTreatments.contains(existing)) {
+      existing.maleCount = maleCount;
+      existing.femaleCount = femaleCount;
+      _selectedTreatments.add(existing);
+    } else {
+      existing.maleCount = maleCount;
+      existing.femaleCount = femaleCount;
+    }
+
+    _calculateTotal();
+    notifyListeners();
+  }
+
+  
+void setdiscount(double amount){
+  _discountAmount=amount;
+      _calculateTotal();
+
+  notifyListeners();
+}
+void saveadvanceamount(double amount){
+  _advanceAmount=amount;
+  notifyListeners();
+      _calculateTotal();
+
+}
+
+  void removeTreatment(int treatmentId) {
+    _selectedTreatments.removeWhere((t) => t.treatment.id == treatmentId);
+    _calculateTotal();
+    notifyListeners();
+  }
+
+  void updateMaleCount(int treatmentId, int count) {
+    final treatment = _selectedTreatments.firstWhere(
+      (t) => t.treatment.id == treatmentId,
+    );
+    treatment.maleCount = count;
+    _calculateTotal();
+    notifyListeners();
+  }
+
+  void updateFemaleCount(int treatmentId, int count) {
+    final treatment = _selectedTreatments.firstWhere(
+      (t) => t.treatment.id == treatmentId,
+    );
+    treatment.femaleCount = count;
+    _calculateTotal();
+    notifyListeners();
+  }
+
+  void _calculateTotal() {
+    _totalAmount = _selectedTreatments.fold(0, (sum, t) => sum + t.total);
+    _balanceAmount = _totalAmount - _discountAmount - _advanceAmount;
+  }
+
 
 
 Future<void>fetchtreatmentDetails(String token)async{
@@ -143,6 +208,38 @@ _treatments=data.treatments;
       'branch': _selectedBranch?.id.toString() ?? '',
       'treatments': treatmentIds,
     };
+  }
+
+
+  Future<bool>registerpatient(String name,String phone,String address,String token)async{
+_isLoading=true;
+_errorMessage=null;
+notifyListeners();
+try {
+  final formdata=getFormData(name, phone, address);
+
+        final response = await ApiServices.registerPatient(token, formdata);
+
+        if(response['status']==true){
+
+                  reset();
+
+        notifyListeners();
+return true;
+        }else{
+          _errorMessage = response['message'] ?? 'Registration failed';
+        _isLoading = false;
+        notifyListeners();
+        return false;
+        }
+  
+} catch (e) {
+_errorMessage = 'Error: $e';
+      _isLoading = false;
+      notifyListeners();
+      return false;
+}
+
   }
 
   void reset() {
