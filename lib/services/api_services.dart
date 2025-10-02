@@ -1,8 +1,11 @@
 import 'dart:convert';
 
 import 'package:ayurveda/const/api_url.dart';
+import 'package:ayurveda/model/branch_model.dart';
 import 'package:ayurveda/model/login_response_model.dart';
 import 'package:ayurveda/model/patient_model.dart';
+import 'package:ayurveda/model/treatment_list_model.dart';
+import 'package:flutter/material.dart';
 import 'package:http/http.dart'as http;
 
 class ApiServices {
@@ -60,7 +63,61 @@ try {
 }
 
 
+
 }
+static Future<TreatmentListResponse>gerTreatmentlist(String token)async{
+
+Uri url =buildBaseUrl("TreatmentList");
+try {
+  final response= await http.get(url,headers: {
+       'Authorization': 'Bearer $token',
+
+  });
+
+  final data= json.decode(response.body);
+  return TreatmentListResponse.fromJson(data);
+
+
+} catch (e) {
+        throw Exception('Failed to fetch treatments: $e');
+
+}
+
+}
+
+  static Future<BranchListResponse> getBranchList(String token) async {
+    Uri url =buildBaseUrl("BranchList");
+
+    try {
+      final response = await http.get(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+      );
+      final data = json.decode(response.body);
+      return BranchListResponse.fromJson(data);
+    } catch (e) {
+      throw Exception('Failed to fetch branches: $e');
+    }
+  }
+
+  
+  static Future<Map<String, dynamic>> registerPatient(
+    String token,
+    Map<String, dynamic> data,
+  ) async {
+
+    Uri url=buildBaseUrl("PatientUpdate");
+    try {
+      final response = await http.post(
+        url,
+        headers: {'Authorization': 'Bearer $token'},
+        body: data,
+      );
+      return json.decode(response.body);
+    } catch (e) {
+      throw Exception('Failed to register patient: $e');
+    }
+  }
 
 
 
