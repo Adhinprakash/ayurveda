@@ -1,6 +1,8 @@
 
 import 'package:ayurveda/controller/patient_registration.dart';
 import 'package:ayurveda/model/branch_model.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -22,45 +24,49 @@ class PdfService {
     required Branch? branch,
   }) async {
     final pdf = pw.Document();
-
+    final imageLogo = pw.MemoryImage(
+      (await rootBundle.load('assets/images/app logo ayurveda.png')).buffer.asUint8List(),
+    );
     pdf.addPage(
       pw.Page(
         build: (context) {
           return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
-              // Header with Logo
+              
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
+
+                  pw.Image(imageLogo,height: 70,width: 70),
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
                       pw.Text(
                         'KUMARAKOM',
                         style: pw.TextStyle(
-                          fontSize: 24,
+                          fontSize: 15,
                           fontWeight: pw.FontWeight.bold,
-                          color: PdfColors.green700,
+                          color: PdfColors.black,
                         ),
                       ),
                       pw.Text(
                         branch?.address ?? 'Cheepunkal P.O, Kumarakom, Kottayam, Kerala - 686563',
-                        style: const pw.TextStyle(fontSize: 10),
+                        style: const pw.TextStyle(fontSize: 10,color: PdfColors.grey),
                       ),
                       pw.Text(
                         'e-mail: ${branch?.mail ?? "unknown@gmail.com"}',
-                        style: const pw.TextStyle(fontSize: 10),
+                        style:  pw.TextStyle(fontSize: 10,color: PdfColors.grey),
                       ),
                       pw.Text(
                         'Mob: ${branch?.phone ?? "+91 9876543210"}',
-                        style: const pw.TextStyle(fontSize: 10),
+                        style: const pw.TextStyle(fontSize: 10,color: PdfColors.grey),
                       ),
                       if (branch?.gst.isNotEmpty ?? false)
                         pw.Text(
                           'GST No: ${branch?.gst}',
                           style: const pw.TextStyle(fontSize: 10),
                         ),
+                        pw.Text("GST NO: 32AABCU9603R1ZW",style: pw.TextStyle(fontSize: 12,))
                     ],
                   ),
                 ],
@@ -68,7 +74,6 @@ class PdfService {
 
               pw.SizedBox(height: 30),
 
-              // Patient Details
               pw.Text(
                 'Patient Details',
                 style: pw.TextStyle(
@@ -85,21 +90,21 @@ class PdfService {
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Name: $name'),
+                      pw.Text('Name: $name',style: pw.TextStyle(color: PdfColors.black)),
                       pw.SizedBox(height: 5),
-                      pw.Text('Address: $address'),
+                      pw.Text('Address: $address',style: pw.TextStyle(color: PdfColors.black)),
                       pw.SizedBox(height: 5),
-                      pw.Text('WhatsApp Number: $phone'),
+                      pw.Text('WhatsApp Number: $phone',style: pw.TextStyle(color: PdfColors.black)),
                     ],
                   ),
                   pw.Column(
                     crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      pw.Text('Booked On: $bookedOn'),
+                      pw.Text('Booked On: $bookedOn',style: pw.TextStyle(color: PdfColors.black)),
                       pw.SizedBox(height: 5),
-                      pw.Text('Treatment Date: $treatmentDate'),
+                      pw.Text('Treatment Date: $treatmentDate',style: pw.TextStyle(color: PdfColors.black)),
                       pw.SizedBox(height: 5),
-                      pw.Text('Treatment Time: $treatmentTime'),
+                      pw.Text('Treatment Time: $treatmentTime',style: pw.TextStyle(color: PdfColors.black)),
                     ],
                   ),
                 ],
@@ -107,7 +112,6 @@ class PdfService {
 
               pw.SizedBox(height: 30),
 
-              // Treatment Table
               pw.Text(
                 'Treatment',
                 style: pw.TextStyle(
@@ -119,9 +123,7 @@ class PdfService {
               pw.SizedBox(height: 10),
 
               pw.Table(
-                border: pw.TableBorder.all(color: PdfColors.grey400),
                 children: [
-                  // Header
                   pw.TableRow(
                     decoration: const pw.BoxDecoration(color: PdfColors.grey300),
                     children: [
@@ -147,81 +149,78 @@ class PdfService {
                       ),
                     ],
                   ),
-                  // Data rows
                   ...treatments.map((t) {
                     return pw.TableRow(
                       children: [
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text(t.treatment.name),
+                          child: pw.Text(t.treatment.name,style: pw.TextStyle(color: PdfColors.grey)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text('₹${t.treatment.price}'),
+                          child: pw.Text('₹ ${t.treatment.price}',style: pw.TextStyle(color: PdfColors.grey)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text('${t.maleCount}'),
+                          child: pw.Text('${t.maleCount}',style: pw.TextStyle(color: PdfColors.grey)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text('${t.femaleCount}'),
+                          child: pw.Text('${t.femaleCount}',style: pw.TextStyle(color: PdfColors.grey)),
                         ),
                         pw.Padding(
                           padding: const pw.EdgeInsets.all(8),
-                          child: pw.Text('₹${t.total.toStringAsFixed(0)}'),
+                          child: pw.Text('₹ ${t.total.toStringAsFixed(0)}',style: pw.TextStyle(color: PdfColors.grey)),
                         ),
                       ],
                     );
                   }).toList(),
                 ],
               ),
+pw.Divider(thickness: 0.1),              pw.SizedBox(height:40),
 
-              pw.SizedBox(height: 20),
-
-              // Amount Summary
               pw.Align(
                 alignment: pw.Alignment.centerRight,
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.end,
                   children: [
-                    pw.Text('Total Amount: ₹${totalAmount.toStringAsFixed(0)}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Total Amount: ₹ ${totalAmount.toStringAsFixed(0)}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                     pw.SizedBox(height: 5),
-                    pw.Text('Discount: ₹${discount.toStringAsFixed(0)}'),
+                    pw.Text('Discount: ₹ ${discount.toStringAsFixed(0)}'),
                     pw.SizedBox(height: 5),
-                    pw.Text('Advance: ₹${advance.toStringAsFixed(0)}'),
+                    pw.Text('Advance: ₹ ${advance.toStringAsFixed(0)}'),
                     pw.SizedBox(height: 5),
-                    pw.Text('Balance: ₹${balance.toStringAsFixed(0)}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+                    pw.Text('Balance: ₹ ${balance.toStringAsFixed(0)}', style: pw.TextStyle(fontWeight: pw.FontWeight.bold)),
                   ],
                 ),
               ),
 
               pw.Spacer(),
 
-              // Thank you message
-              pw.Center(
-                child: pw.Column(
-                  children: [
-                    pw.Text(
-                      'Thank you for choosing us',
-                      style: pw.TextStyle(
-                        fontSize: 18,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColors.green700,
-                      ),
+             pw.Align(
+              alignment: pw.Alignment.centerRight,
+              child:  pw.Column(
+                children: [
+                  pw.Text(
+                    'Thank you for choosing us',
+                    style: pw.TextStyle(
+                      fontSize: 18,
+                      fontWeight: pw.FontWeight.bold,
+                      color: PdfColors.green700,
                     ),
-                    pw.SizedBox(height: 5),
-                    pw.Text(
-                      'Your well-being is our commitment, and we\'re honored',
-                      style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey),
-                    ),
-                    pw.Text(
-                      'you\'ve entrusted us with your health journey',
-                      style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey),
-                    ),
-                  ],
-                ),
+                  ),
+                  pw.SizedBox(height: 5),
+                  pw.Text(
+                    'Your well-being is our commitment, and we\'re honored',
+                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey),
+                  ),
+                  pw.Text(
+                    'you\'ve entrusted us with your health journey',
+                    style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey),
+                  ),
+                ],
               ),
+             )
             ],
           );
         },

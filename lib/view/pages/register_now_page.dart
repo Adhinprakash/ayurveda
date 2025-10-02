@@ -4,7 +4,10 @@ import 'package:ayurveda/controller/registration_provider.dart';
 import 'package:ayurveda/main.dart';
 import 'package:ayurveda/view/pages/pdf.dart';
 import 'package:ayurveda/view/widgets/add_treatment_dialoag.dart';
+import 'package:ayurveda/view/widgets/radio_option_widget.dart';
+import 'package:ayurveda/view/widgets/register_page_dropdowns.dart';
 import 'package:ayurveda/view/widgets/regiter_page_textfield.dart';
+import 'package:ayurveda/view/widgets/treatment_card.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -55,7 +58,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
       final DateTime? picked = await showDatePicker(
           context: context,
           firstDate: DateTime.now(),
-          lastDate: DateTime.now(),
+          lastDate: DateTime(2026),
           initialDate: DateTime.now());
 
       if (picked != null) {
@@ -118,7 +121,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Patient registered successfully!'), backgroundColor: Colors.green),
           );
-          
+          registerprovider.reset();
           Navigator.pop(context);
 
     }else{
@@ -194,7 +197,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
 
               Consumer<RegistrationProvider>(
                 builder: (context, provider, _) {
-                  return _buildDropdown('Location', provider.selectedLocation, _locations,
+                  return buildDropdown('Location', provider.selectedLocation, _locations,
                       (value) => provider.setlocation(value!));
                 },
               ),
@@ -202,7 +205,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
 
               Consumer<RegistrationProvider>(
                 builder: (context, provider, _) {
-                  return _buildDropdown(
+                  return buildDropdown(
                     'Branch',
                     provider.selectedBranch?.name,
                     provider.branches.map((b) => b.name).toList(),
@@ -223,7 +226,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
                   return Column(
                     children: [
                       ...provider.selectedTreatments.asMap().entries.map((entry) {
-                        return _buildTreatmentCard(entry.key + 1, entry.value, provider,context);
+                        return buildTreatmentCard(entry.key + 1, entry.value, provider,context);
                       }).toList(),
                       const SizedBox(height: 8),
                       InkWell(
@@ -277,15 +280,15 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
                 builder: (context, provider, _) {
                   return Row(
                     children: [
-                      _buildRadioOption('Cash', provider.paymentOption == 'Cash', () {
+                      buildRadioOption('Cash', provider.paymentOption == 'Cash', () {
                         provider.setPaymentOption('Cash');
                       }),
                       const SizedBox(width: 16),
-                      _buildRadioOption('Card', provider.paymentOption == 'Card', () {
+                      buildRadioOption('Card', provider.paymentOption == 'Card', () {
                         provider.setPaymentOption('Card');
                       }),
                       const SizedBox(width: 16),
-                      _buildRadioOption('UPI', provider.paymentOption == 'UPI', () {
+                      buildRadioOption('UPI', provider.paymentOption == 'UPI', () {
                         provider.setPaymentOption('UPI');
                       }),
                     ],
@@ -321,6 +324,10 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
                 builder: (context, provider, _) {
                   return InkWell(
                     onTap: ()async{
+
+
+
+                    
                       _selectdate();
                     },
                     child: IgnorePointer(
@@ -349,7 +356,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
                           child: IgnorePointer(
                             child: buildTextField(
                               '',
-                              TextEditingController(text: provider.treatmentTime.hour.toString().padLeft(2, '0')),
+                              TextEditingController(text: provider.treatmentTime.hourOfPeriod.toString().padLeft(2, '0')),
                               'Hour',
                             ),
                           ),
@@ -399,155 +406,10 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
     
   }
 
-  Widget _buildDropdown(
-    String label,
-    String? value,
-    List<String> items,
-    Function(String?) onChanged, {
-    String hint = '',
-  }) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(label, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w500)),
-        const SizedBox(height: 8),
-        DropdownButtonFormField<String>(
-          value: items.contains(value) ? value : null,
-          decoration: InputDecoration(
-            filled: true,
-            fillColor: Colors.grey[100],
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide(color: Colors.grey[300]!),
-            ),
-          ),
-          hint: Text(hint.isEmpty ? 'Choose your $label' : hint),
-          items: items.map((item) {
-            return DropdownMenuItem(value: item, child: Text(item));
-          }).toList(),
-          onChanged: onChanged,
-          validator: (value) {
-            if (value == null) {
-              return 'Please select $label';
-            }
-            return null;
-          },
-        ),
-      ],
-    );
-  }
+ 
 
-  Widget _buildRadioOption(String label, bool selected, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Radio(
-            value: selected,
-            groupValue: true,
-            onChanged: (_) => onTap(),
-            activeColor: const Color(0xFF006837),
-          ),
-          Text(label),
-        ],
-      ),
-    );
-  }
 
-  Widget _buildTreatmentCard(
-    int index,
-    TreatmentSelection selection,
-    RegistrationProvider provider,
-    BuildContext context
-  ) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: Colors.grey[50],
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey[300]!),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Text(
-                  '$index. ${selection.treatment.name}',
-                  style: const TextStyle(fontWeight: FontWeight.w600),
-                ),
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.edit, size: 20, color: Color(0xFF006837)),
-                    onPressed: () {
-                      showDialog(
-                        context:context ,
-                        builder: (_) => AddTreatmentDialog(existingSelection: selection),
-                      );
-                    },
-                  ),
-                  IconButton(
-                    icon: const Icon(Icons.close, size: 20, color: Colors.red),
-                    onPressed: () {
-                      provider.removeTreatment(selection.treatment.id);
-                    },
-                  ),
-                ],
-              ),
-            ],
-          ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Male', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.grey[300]!),
-                      ),
-                      child: Text('${selection.maleCount}'),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    const Text('Female', style: TextStyle(fontSize: 14)),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(4),
-                        border: Border.all(color: Colors.grey[300]!),
-                      ),
-                      child: Text('${selection.femaleCount}'),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
+
 }
 
 

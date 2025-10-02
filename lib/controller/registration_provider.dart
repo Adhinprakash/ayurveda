@@ -222,8 +222,7 @@ try {
 
         if(response['status']==true){
 
-                  reset();
-
+          
         notifyListeners();
 return true;
         }else{
