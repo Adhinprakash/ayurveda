@@ -71,8 +71,10 @@ class PdfService {
                   ),
                 ],
               ),
+                 pw.SizedBox(height:25),
 
-              pw.SizedBox(height: 30),
+pw.Divider( thickness:  0.3,color: PdfColors.grey),
+              pw.SizedBox(height: 25),
 
               pw.Text(
                 'Patient Details',
@@ -177,7 +179,7 @@ class PdfService {
                   }).toList(),
                 ],
               ),
-pw.Divider(thickness: 0.1),              pw.SizedBox(height:40),
+pw.Divider(thickness:  0.5,color: PdfColors.grey),              pw.SizedBox(height:40),
 
               pw.Align(
                 alignment: pw.Alignment.centerRight,
@@ -220,14 +222,17 @@ pw.Divider(thickness: 0.1),              pw.SizedBox(height:40),
                   ),
                 ],
               ),
-             )
+             ),
+
+             pw.SizedBox(height: 40),
+             pw.Divider(thickness: 0.5,color: PdfColors.grey),
+             pw.Text("“Booking amount is non-refundable, and it's important to arrive on the allotted time for your treatment”",style: const pw.TextStyle(fontSize: 10, color: PdfColors.grey))
             ],
           );
         },
       ),
     );
 
-    // Print or save PDF
     await Printing.layoutPdf(
       onLayout: (format) async => pdf.save(),
     );
