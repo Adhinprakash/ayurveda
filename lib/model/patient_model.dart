@@ -74,11 +74,14 @@ class PatientDetail {
   final String male;
   final String female;
   final int? treatment;
+  final String treatmentName;
+
 
   PatientDetail({
     required this.id,
     required this.male,
     required this.female,
+    required this.treatmentName,
     this.treatment,
   });
 
@@ -88,6 +91,8 @@ class PatientDetail {
       male: json['male'] ?? '',
       female: json['female'] ?? '',
       treatment: json['treatment'],
+      treatmentName: json['treatment_name'] ?? '',   // map here
+
     );
   }
 }

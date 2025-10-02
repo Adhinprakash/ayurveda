@@ -88,7 +88,6 @@ final size=MediaQuery.of(context).size;
                   child: Container(
                     height: size.height*0.05  ,
                     decoration: BoxDecoration(
-                      color: Colors.grey[100],
                       borderRadius: BorderRadius.circular(8),
                       border: Border.all(color: Colors.grey[300]!),
                     ),

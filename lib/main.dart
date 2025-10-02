@@ -4,6 +4,7 @@ import 'package:ayurveda/controller/registration_provider.dart';
 import 'package:ayurveda/view/pages/login_page.dart';
 import 'package:ayurveda/view/pages/splasj_screen.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
 void main() {
@@ -26,7 +27,9 @@ ChangeNotifierProvider(create: (_)=>RegistrationProvider())
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-       
+       textTheme: GoogleFonts.poppinsTextTheme(
+        Theme.of(context).textTheme
+       ),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),

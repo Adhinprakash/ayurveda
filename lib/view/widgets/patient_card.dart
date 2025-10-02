@@ -13,13 +13,16 @@ class PatientCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final dateFormat = DateFormat('dd/MM/yyyy');
+    // final dateFormat = DateFormat('dd/MM/yyyy');
 
     String formattedDate = "";
 
-    final treatmentname = patient.name.isEmpty
-        ? patient.name
+    final treatmentname = patient.patientDetails.isNotEmpty
+        ? patient.patientDetails.first.treatmentName
         : 'Couple Combo Package (Rejuven...)';
+
+
+final dateFormat = DateFormat('dd/MM/yyyy'); 
 
     return Container(
       padding: EdgeInsets.all(10),
@@ -39,7 +42,7 @@ class PatientCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Vikram singh",
+                    patient.name,
                     style: TextStyle(fontSize: 18,fontWeight: FontWeight.w500),
                   ),
                   const SizedBox(height: 4),
