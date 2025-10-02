@@ -31,6 +31,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   @override
   Widget build(BuildContext context) {
     final provider = context.watch<RegistrationProvider>();
+final size=MediaQuery.of(context).size;
 
     return Dialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
@@ -92,7 +93,7 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
               const SizedBox(height: 24),
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: size.height*0.06,
                 child: ElevatedButton(
                   onPressed: () {
                     if (_selectedTreatment != null && (_maleCount > 0 || _femaleCount > 0)) {
@@ -126,6 +127,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
   }
 
   Widget _buildPatientCounter(String label, int count, Function(int) onChanged) {
+    final size=MediaQuery.of(context).size;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -152,8 +155,8 @@ class _AddTreatmentDialogState extends State<AddTreatmentDialog> {
               ),
               const SizedBox(width: 16),
               Container(
-                width: 50,
-                height: 36,
+                width: size.width*0.095,
+                height: size.height*0.05,
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(4),

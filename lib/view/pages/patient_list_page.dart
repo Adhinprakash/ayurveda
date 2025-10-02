@@ -41,10 +41,22 @@ class _PatientListScreenState extends State<PatientListScreen> {
   }
 }
 
+
+ handlelogin(BuildContext context)async{
+          final authprovider = context.watch<AuthProvider>();
+    final   bool? result=  await authprovider.logout();
+    if(result==true){
+            Navigator.pushReplacement(context, MaterialPageRoute(builder: (_) => PatientListScreen()));
+
+    }
+
+
+}
   @override
   Widget build(BuildContext context) {
 
     final patientProvider = context.watch<PatientlistController>();
+
 final size=MediaQuery.of(context).size;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -53,14 +65,19 @@ final size=MediaQuery.of(context).size;
         elevation: 0,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () async{
+           handlelogin(context);
+
+          }
         ),
         actions: [
           Stack(
             children: [
               IconButton(
                 icon: const Icon(Icons.notifications_outlined, color: Colors.black,size: 30,),
-                onPressed: () {},
+                onPressed: () {
+
+                },
               ),
               Positioned(
                 right: 12,
@@ -209,7 +226,7 @@ const SizedBox(height: 20,),
             padding: const EdgeInsets.all(16.0),
             child: SizedBox(
               width: double.infinity,
-              height: 50,
+              height: size.height*0.06,
               child: ElevatedButton(
                 onPressed: () {
                                       Navigator.push(context, MaterialPageRoute(builder: (_) => RegisterNowPage()));

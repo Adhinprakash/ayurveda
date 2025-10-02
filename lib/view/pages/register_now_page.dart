@@ -136,6 +136,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
   Widget build(BuildContext context) {
 
 
+final size=MediaQuery.of(context).size;
 
 
     return Scaffold(
@@ -383,7 +384,7 @@ class _RegisterNowPageState extends State<RegisterNowPage> {
 
               SizedBox(
                 width: double.infinity,
-                height: 50,
+                height: size.height*0.06,
                 child: ElevatedButton(
                   onPressed:()async{
                     _submitform();
